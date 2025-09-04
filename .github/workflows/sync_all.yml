@@ -6,6 +6,8 @@ on:
       - main
     paths:
       - '**.md'
+      - '**/**.md'
+      - '**/**/**.md'
 jobs:
   sync_to_public_repo:
     runs-on: ubuntu-latest
