@@ -1,4 +1,4 @@
-name: Sync All Documentation
+name: Sync Documentation to Public Repo
 
 on:
   push:
