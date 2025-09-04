@@ -12,13 +12,13 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: 'AnnaSut/sealion'
-          path: sealion
+          path: ssot
 
       - name: Checkout Public Repo
         uses: actions/checkout@v4
         with:
           repository: 'anochasut/sealion'
-          path: sealion
+          path: public
           token: ${{ secrets.PUBLIC_REPO_PAT }}
           
       - name: Sync docs folder
@@ -30,18 +30,18 @@ jobs:
           # -v: verbose (shows which files are being copied)
           # --delete: This is key! It deletes files in the 'public' destination if they were deleted in the 'ssot' source.
           # This ensures the public repo is a true mirror.          
-          rsync -av --delete --exclude='.git' ./sealion/models/sea-lion-v4/ ./sealion/models/sea-lion-v4/
+          rsync -av --delete --exclude='.git' './ssot/' './public/'
 
       - name: Configure git user
         run: |
-          cd ./sealion
+          cd ./public
           git config user.name "anochasut"
           git config user.email "anocha.mcomp@gmail.com"
 
       - name: Commit and push changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          repository: ./sealion
+          repository: ./public
           commit_message: "docs: Automatic sync from private SSOT repo"
           branch: main
           
