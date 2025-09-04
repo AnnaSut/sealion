@@ -1,0 +1,38 @@
+name: Sync All Documentation
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/**.md'
+jobs:
+  sync_to_public_repo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout SSOT Repo
+        uses: actions/checkout@v4
+        with:
+          repository: 'AnnaSut/sealion'
+          path: sealion
+
+      - name: Checkout Public Repo
+        uses: actions/checkout@v4
+        with:
+          repository: 'anochasut/sealion'
+          path: sealion
+          token: ${{ secrets.PUBLIC_REPO_PAT }}
+          
+      - name: Sync docs folder
+        run: |
+          # This command copies content from private to public, deleting files in public
+          # that no longer exist in private. It's a true mirror.
+          rsync -av --delete --exclude='.git' ./sealion/models/sea-lion-v4/ ./sealion/models/sea-lion-v4/
+
+      - name: Commit and push changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          repository: ./sealion
+          commit_message: "docs: Automatic sync from private SSOT repo"
+          branch: main
+          
